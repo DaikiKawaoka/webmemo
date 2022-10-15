@@ -1,4 +1,4 @@
-name: laravel-create-project
+name: Laravel Testing
 
 on:
   pull_request:
@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Git Clone Project
+        run: git clone https://github.com/DaikiKawaoka/webmemo.git src
+
       - name: Docker Version
         run: docker version
 
@@ -17,9 +20,7 @@ jobs:
         run: docker compose build
 
       - name: Create & Start Docker Containers
-        run: |
-          mkdir api
-          docker compose up -d
+        run: docker compose up -d
 
       - name: PHP Version
         run: docker compose exec api php --version
@@ -27,11 +28,16 @@ jobs:
       - name: Composer Version
         run: docker compose exec api composer --version
 
-      - name: Create Laravel Project
-        run: docker compose exec api composer create-project --prefer-dist laravel/laravel .
+      - name: Composer Install
+        run: docker compose exec api composer install
 
       - name: Laravel Version
         run: docker compose exec api php artisan --version
+
+      - name: Laravel Settings
+        run: |
+          docker compose exec api cp .env.example .env
+          docker compose exec api php artisan key:generate
 
       - name: Wait for the MySQL container to start
         run: sleep 5s
