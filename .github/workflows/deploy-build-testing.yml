@@ -1,0 +1,20 @@
+name: deploy-build-testing
+
+on:
+  pull_request:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Git Clone Project
+        run: git clone https://github.com/DaikiKawaoka/webmemo.git src
+
+      - name: Docker Version
+        run: docker version
+
+      - name: Build Docker Images
+        run: docker compose build api

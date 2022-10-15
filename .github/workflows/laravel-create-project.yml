@@ -1,0 +1,55 @@
+name: laravel-create-project
+
+on:
+  pull_request:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Docker Version
+        run: docker version
+
+      - name: Build Docker Images
+        run: docker compose build
+
+      - name: Create & Start Docker Containers
+        run: |
+          mkdir api
+          docker compose up -d
+
+      - name: OS Version
+        run: |
+          docker compose exec api cat /etc/os-release
+          docker compose exec api cat /etc/debian_version
+
+      - name: PHP Version
+        run: docker compose exec api php --version
+
+      - name: Composer Version
+        run: docker compose exec api composer --version
+
+      - name: Create Laravel Project
+        run: docker compose exec api composer create-project --prefer-dist laravel/laravel .
+
+      - name: Laravel Version
+        run: docker compose exec api php artisan --version
+
+      - name: Wait for the MySQL container to start
+        run: sleep 5s
+        shell: bash
+
+      - name: Laravel Migrate Testing
+        run: docker compose exec api php artisan migrate
+
+      - name: Laravel Rollback Testing
+        run: docker compose exec api php artisan migrate:refresh
+
+      - name: Laravel Seeding Testing
+        run: docker compose exec api php artisan db:seed
+
+      - name: Laravel PHPUnit Testing
+        run: docker compose exec api php artisan test
