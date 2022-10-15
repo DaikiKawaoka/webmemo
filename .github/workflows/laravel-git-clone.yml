@@ -22,11 +22,6 @@ jobs:
       - name: Create & Start Docker Containers
         run: docker compose up -d
 
-      - name: OS Version
-        run: |
-          docker compose exec api cat /etc/os-release
-          docker compose exec api cat /etc/debian_version
-
       - name: PHP Version
         run: docker compose exec api php --version
 
