@@ -29,7 +29,6 @@ services:
     restart: always
     depends_on:
       - api
-    # command: yarn dev
 
   api:
     container_name: api
