@@ -18,7 +18,6 @@ jobs:
 
       - name: Create & Start Docker Containers
         run: |
-          mkdir api
           docker compose up -d
 
       - name: OS Version
