@@ -2,8 +2,6 @@ name: Docker Testing
 
 on:
   pull_request:
-    paths:
-      - 'infra/*'
 
 jobs:
   docker-build:
