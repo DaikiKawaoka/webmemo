@@ -22,9 +22,9 @@ up:
 build:
 	docker compose build
 web:
-	docker compose exec web bash
+	docker compose exec web sh
 api:
-	docker compose exec api bash
+	docker compose exec api sh
 migrate:
 	docker compose exec api php artisan migrate
 fresh:
