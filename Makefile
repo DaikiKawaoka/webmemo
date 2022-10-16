@@ -7,42 +7,20 @@ install:
 	docker compose exec api php artisan storage:link
 	docker compose exec api chmod -R 777 storage bootstrap/cache
 	@make fresh
+	docker compose exec wev yarn install
+	docker compose exec wev yarn start
+
+init:
+	docker-compose up --build -d
+	docker-compose exec api cp .env.example .env
+	docker-compose exec api php artisan key:generate
+	docker-compose exec api php artisan migrate:refresh --seed
+	docker compose exec web yarn start
+
 up:
 	docker compose up -d
 build:
 	docker compose build
-remake:
-	@make destroy
-	@make init
-stop:
-	docker compose stop
-down:
-	docker compose down --remove-orphans
-down-v:
-	docker compose down --remove-orphans --volumes
-restart:
-	@make down
-	@make up
-destroy:
-	docker compose down --rmi all --volumes --remove-orphans
-ps:
-	docker compose ps
-logs:
-	docker compose logs
-logs-watch:
-	docker compose logs --follow
-log-web:
-	docker compose logs web
-log-web-watch:
-	docker compose logs --follow web
-log-api:
-	docker compose logs api
-log-api-watch:
-	docker compose logs --follow api
-log-db:
-	docker compose logs db
-log-db-watch:
-	docker compose logs --follow db
 web:
 	docker compose exec web bash
 api:
